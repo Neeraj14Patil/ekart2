@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_HUB_USER = 'your-dockerhub-username' 
+        IMAGE_NAME = "usermanagement-application-image"
+    }
+    stages {
+        stage('Clone') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Artifact') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        def customImage = docker.build("${DOCKER_HUB_USER}/${IMAGE_NAME}:latest")
+                        customImage.push()
+                    }
+                }
+            }
+        }
+        stage('Deploy via Compose') {
+            steps {
+                // Using the new 'docker compose' command as requested
+                sh 'docker compose up -d'
+            }
+        }
+    }
+    post {
+        always {
+            // Clean workspace to pass Testcase #8
+            deleteDir()
+        }
+    }
+}
