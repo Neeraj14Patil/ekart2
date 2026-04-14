@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_USER = 'neeraj14patil' 
-        IMAGE_NAME = 'ekart-application-image'
+        IMAGE_NAME = 'ekart2-application-image'
     }
     stages {
         stage('Checkout Source') {
