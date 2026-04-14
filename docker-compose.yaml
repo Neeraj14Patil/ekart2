@@ -18,7 +18,7 @@ services:
     image: ekart2-application-image:latest
     container_name: ekart2-application-1
     ports:
-      - "8082:8081"
+      - "8062:8061"
     depends_on:
       - mysql-db
     networks:
